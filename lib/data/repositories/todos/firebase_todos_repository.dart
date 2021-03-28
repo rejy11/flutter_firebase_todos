@@ -19,17 +19,15 @@ class FirebaseTodosRepository implements TodosRepository {
 
   @override
   Stream<List<Todo>> todos() {
-    return todoCollection.orderBy('dateCreated').snapshots().map((snapshot) => snapshot.docs
-        .map(
-          (doc) {
-            final data = doc.data();
-            data['id'] = doc.id;
-            return Todo.fromEntity(
-            TodoEntity.fromMap(data),
-          );
-          },
-        )
-        .toList());
+    return todoCollection
+        .orderBy('dateCreated')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map(
+              (doc) {
+                final todoEntity = TodoEntity.fromMap(doc.data());
+                return Todo.fromEntity(todoEntity, doc.id);
+              },
+            ).toList());
   }
 
   @override
@@ -39,7 +37,7 @@ class FirebaseTodosRepository implements TodosRepository {
 
   @override
   Future<void> deleteAllTodos() async {
-    return await todoCollection.snapshots().forEach((element) { 
+    return await todoCollection.snapshots().forEach((element) {
       for (var doc in element.docs) {
         doc.reference.delete();
       }

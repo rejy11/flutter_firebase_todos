@@ -18,7 +18,7 @@ class _TodosPageState extends State<TodosPage> {
 
   @override
   void initState() {
-    todosCubit = BlocProvider.of<TodosCubit>(context);
+    todosCubit = context.read<TodosCubit>();
     todosCubit.loadTodos();
     super.initState();
   }
@@ -42,7 +42,7 @@ class _TodosPageState extends State<TodosPage> {
                 PopupMenuItem(child: Text('Remove All'), value: 1),
                 PopupMenuItem(child: Text('Remove All Completed'), value: 4),
                 PopupMenuItem(child: Text('Insert Test Data'), value: 2),
-                PopupMenuItem(child: Text('Logout'), value: 3),                
+                PopupMenuItem(child: Text('Logout'), value: 3),
               ];
             },
             onSelected: (value) async {
@@ -54,10 +54,8 @@ class _TodosPageState extends State<TodosPage> {
                 await _insertTestData();
               } else if (value == 3) {
                 //logout
-                BlocProvider.of<AuthenticationCubit>(context).signOut();
-              } else if (value == 4) {
-                
-              }
+                context.read<AuthenticationCubit>().signOut();
+              } else if (value == 4) {}
             },
           ),
         ],
@@ -100,16 +98,23 @@ class _TodosPageState extends State<TodosPage> {
                       child: Slidable(
                         actionPane: SlidableDrawerActionPane(),
                         actionExtentRatio: 0.25,
-                        child: CheckboxListTile(
-                          title: Text(todo.task),
-                          value: todo.complete,
-                          onChanged: (value) {
-                            BlocProvider.of<TodosCubit>(context).updateTodo(
-                              todo.copyWith(
-                                complete: value,
-                              ),
-                            );
-                          },
+                        child: Container(
+                          child: CheckboxListTile(
+                            title: Text(todo.task),
+                            value: todo.complete,
+                            onChanged: (value) {
+                              context.read<TodosCubit>().updateTodo(
+                                    todo.copyWith(
+                                      complete: value,
+                                    ),
+                                  );
+                            },
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              right: BorderSide(color: Colors.grey[200]),
+                            ),
+                          ),
                         ),
                         secondaryActions: [
                           IconSlideAction(

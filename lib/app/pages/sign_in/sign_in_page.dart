@@ -35,7 +35,7 @@ class SignInPage extends StatelessWidget {
                 ElevatedButton(
                   child: Text('Sign in'),
                   onPressed: () =>
-                      BlocProvider.of<AuthenticationCubit>(context).signIn(),
+                      context.read<AuthenticationCubit>().signIn(),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(

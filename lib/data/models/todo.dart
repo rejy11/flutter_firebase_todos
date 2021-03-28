@@ -19,18 +19,17 @@ class Todo {
 
   TodoEntity toEntity() {
     return TodoEntity(
-      this.id,
       this.task,
       this.complete,
       Timestamp.fromDate(this.dateCreated),
     );
   }
 
-  static Todo fromEntity(TodoEntity entity) {
+  static Todo fromEntity(TodoEntity entity, String id) {
     return Todo(
       entity.task,
       complete: entity.complete ?? false,
-      id: entity.id,
+      id: id,
       dateCreated: entity.dateCreated.toDate(),
     );
   }
